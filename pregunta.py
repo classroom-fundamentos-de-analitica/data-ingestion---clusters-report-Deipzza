@@ -17,6 +17,7 @@ def ingest_data():
     #
     # Inserte su código aquí
     #
+    import re
     indice = -1
 
     df = pd.read_fwf('clusters_report.txt', skiprows=4, 
