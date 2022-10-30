@@ -37,10 +37,7 @@ def ingest_data():
             # si no hay espacio antes, lo añade
             if df.iloc[index-1, 3][-1] != ' ':
                 line += ' '
-            # si la línea termina en . lo elimina
-            if row['principales_palabras_clave'][-1] == '.':
-                row['principales_palabras_clave'] = row['principales_palabras_clave'][:-1]
-            line += row['principales_palabras_clave']
+            line += row['principales_palabras_clave'].rstrip('.') # si la línea termina en . lo elimina
             df.iloc[indice, 3] += line
             line = ''
         
@@ -51,8 +48,9 @@ def ingest_data():
     df.reset_index(inplace=True)
     df.drop(axis=1, labels='index', inplace=True)
 
-    for index, row in df.iterrows():
-        df.iloc[index, 2] = float(row['porcentaje_de_palabras_clave'][:-2].replace(',', '.'))
+    # convertir al tipo adecuado los datos de la columna porcentaje_de_palabras_clave
+    df.porcentaje_de_palabras_clave = df.porcentaje_de_palabras_clave.str.strip('%')
+    df.porcentaje_de_palabras_clave = df.porcentaje_de_palabras_clave.str.replace(',', '.').astype(float)
 
     return df
 
